@@ -88,34 +88,50 @@
 \chapter{Introdução}
 
 \chapter{Agglomerative Clustering}
-  Benchmarking é uma prática que consiste em criar programas, operações ou casos de teste para testar o desempenho de um objeto, seja ele software ou hardware (SAAVE-DRA;SMITH, 1996), essa técnica é amplamente abordade em diversas áreas da computação. Esses benchmarks propõem situações que podem ocorer no mundo real, então uma performance de um objeto executando um benchmark é uma prévia de como o objeto executaria uma aplicação real. Nesse trabalho será abordado o desenvolvimento de um benchmark do Agglomerative Clustering utilizando programação paralela.
-  O Agglomerative Clustering é um algoritmo bottom-up, que recebe como entrada um data-set de pontos em um espaço n-dimenional e uma função que mede a similaridade entre os itens desse data-set, normalmente essa função representa uma métrica de distância entre os pontos no espaço, onde os pontos mais semelhantes e encontram mais próximos.
-  O algoritmo trabalha agrupando os pontos mais próximos e, com isso, gera uma Binary Cluster Tree (BCT), que é o resultado do agrupamento dos dados. Em comparação com as outras abordagens, a técnica aglomerativa oferece a vantagem de permitir um agrupamento mais flexível e geralmente produz árvores de maior qualidade sendo usada em uma grande variedade de campos e aplicações, como mineração de dados e bioinformática(WALTER et al.,2008).
-  A forma de implementação mais simples do Agglomerative Clustering apresenta um tempo de execução de O(n3), ou seja, o tempo estimado da execução do programa cresce em uma proporção cúbica em relação ao conjunto de dados, o que é claramente ineficiente, porem dependendo da natureza dos dados e das métricas de avaliação formas mais eficientes do algoritmo podem ser usadas e a sua complexidade geral é considerada O(n2)(OLSON,1995). Essa complexidade ainda é muito grande para trabalhar com grandes conjuntos de dados e portanto é interessante a implementação do algoritmo utilizando paralelismo para aumentar a sua eficiência.
-  Para a implementação do Agglomerative Clustering é possivel escolher entre diversas métricas que serão utilizadas para calcular a distância entre os clusters, essa escolha tem um grande impacto tanto no desempenho como na construção do código e as métricas em si podem ser divididas em duas classes gerais, métricas de grafo e métricas geométricas.
-  Considerando um grafo completamente conectado onde os vértices são os pontos a serem agrupados e as arestas representam a diferença entre esses pontos através da distância euclidiana, as métricas de grafo determinam a similaridade entre dois clusters através do cálculo de similaridade entre os pontos desses clusters, as mais comouns dessas métricas são:
-  \begin{itenmize}
-    \item Single Link: A distância entre dois clusters é dada pela menor distância entre pontos desses clusters.
-    \item Average Link: A distânca entre dois clusters é dada pela média de todos as distâncias entre pontos desses clusters.
-    \item Complete Link: A distância entre dois clusters é dada pela maior distância entre pontos desses clusters
-  \end{itenmize}
+  Benchmarking é uma prática que consiste em criar programas, operações ou casos de teste para testar o desempenho de um objeto, seja ele software ou hardware \cite{saavedra:96}, essa técnica é amplamente abordade em diversas áreas da computação. Esses benchmarks propõem situações que podem ocorer no mundo real, então uma performance de um objeto executando um benchmark é uma prévia de como o objeto executaria uma aplicação real. Nesse trabalho será abordado o desenvolvimento de um benchmark do \textit{Agglomerative Clustering} utilizando programação paralela.
+  O \textit{Agglomerative Clustering} é um algoritmo \textit{bottom-up}, que recebe como entrada \textit{um data-set} de pontos em um espaço n-dimenional e uma função que mede a similaridade entre os itens desse \textit{data-set}, normalmente essa função representa uma métrica de distância entre os pontos no espaço, onde os pontos mais semelhantes entre si se encontram mais próximos.
+  O algoritmo trabalha agrupando os pontos mais próximos em conjuntos e subsequentemente os conjuntos mais próximos em outros conjuntos. O resultado desse agrupamento é uma \textit{Binary Cluster Tree}, uma estrutura em forma de árvore que contem o registro dos agrupamentos e que permite diversas operações no conjunto de dados, um exemplo é a poda da árvore, que pode ser utilizada para separar conjuntos com uma quantidade mínima de similaridade entre seus membros.
+  Em comparação com as outras abordagens, a técnica aglomerativa oferece a vantagem de permitir um agrupamento mais flexível e geralmente produz árvores de maior qualidade sendo usada em uma grande variedade de campos e aplicações, como mineração de dados e bioinformática \cite{walter08}.
+  A forma de implementação mais simples do \textit{Agglomerative Clustering} apresenta um tempo de execução de O(n\textsuperscript{3}), ou seja, o tempo estimado da execução do programa cresce em uma proporção cúbica em relação ao conjunto de dados, o que para um conjunto grande de dados se torna um processo inviável. No entanto, dependendo da natureza dos dados e das métricas de avaliação, formas mais eficientes do algoritmo podem ser usadas e a sua complexidade geral é considerada O(n\textsuperscript{2}) \cite{Olson:1995}. Essa complexidade ainda é muito grande para trabalhar com grandes conjuntos de dados e portanto é interessante a implementação do algoritmo utilizando paralelismo para aumentar a sua eficiência.
+  Para a implementação do \textit{Agglomerative Clustering} é possivel escolher entre diversas métricas que serão utilizadas para calcular a distância entre os conjuntos, essa escolha tem um grande impacto tanto no desempenho como na construção do código e as métricas em si podem ser divididas em duas classes gerais, métricas de grafo e métricas geométricas.
+  Considerando um grafo completamente conectado onde os vértices são os pontos a serem agrupados e as arestas representam a diferença entre esses pontos através da distância euclidiana, as métricas de grafo determinam a similaridade entre dois conjuntos através do cálculo de similaridade entre os pontos desses conjuntos, as mais comuns dessas métricas são:
+  
+  \begin{itemize}
+
+    \item Ligação Simples: A distância entre dois conjuntos é dada pela menor distância entre pontos desses conjuntos.
+    \item Ligação Média: A distânca entre dois conjuntos é dada pela média de todos as distâncias entre pontos desses conjuntos.
+    \item Ligação Completa: A distância entre dois conjuntos é dada pela maior distância entre pontos desses conjuntos
+  
+  \end{itemize}
+  
+  As métricas geométricas tambem consideram uma representação de grafo completo, no entanto elas definem um centro para cada conjuntos e esse centro que será usado para definir a distância entre os conjuntos, as mais comuns dessas métricas são:
+  
+  \begin{itemize}
+  
+    \item Centroide: O centro do conjuntos é o centroide dos pontos do conjuntos, a distância euclidiana é utilizada como medida.
+    \item Mediana: O centro do conjuntos é a média dos centros dos dois clusters aglomerados para formá-lo, a distância euclidiana é utilizada como medida.
+    \item Variância Mínima: O centro do conjuntos é o centroide dos pontos do conjuntos, a distância é o aumento na soma do quadrado das distâncias de cada ponto até o centróide que seria gerado ao aglomerar os dois clusters.   
+  
+  \end{itemize}
+  
+  Cada métrica apresenta suas vantagens, onde algumas inclusive garantem certas características que facilitam o desenvolvimento do algoritmo, nesse trabalho será utilizado pelo menos uma métrica geométrica e uma métrica de grafo.
 
 
 \chapter{Ferramentas de Paralelização}
-  O Benchmark criado nesse trabalho tem como objetivo testar diferentes ferramentas de programação paralela e avaliar qual resulta em uma melhor implementação do algoritmo Agglomerative Clustering, as ferramentas abordadas serão OpenMP, Cilk Plus, Anahy, TBB, C++ 11 e suas caracteristicas serão brevemente descritas a seguir.
+  O Benchmark criado nesse trabalho tem como objetivo testar diferentes ferramentas de programação paralela e avaliar qual resulta em uma melhor implementação do algoritmo \textit{Agglomerative Clustering}, as ferramentas abordadas serão OpenMP, Cilk Plus, Anahy, TBB, C++ 11 e suas caracteristicas serão brevemente descritas a seguir.
   \section{Intel Threading Building Blocks}
-    Threading Building Blocks (TBB) é um ambiente de paralelização baseado em C++ que oferece um conjunto de métodos e templates para a criação de aplicações paralelas (Characterizing and improving the performance of TBB). Essa ferramenta se baseia no suporte a tarefas (tasks) paralelas ao invés de threads e, com isso, oferece uma maior escalabilidade da performance ao redistribuir dinamicamente as tarefas entre os processadores disponíveis. As tasks são regiões especiais do código que cumprem uma ação específica, uma vantagem das tasks é que elas normalmente possuem corpos de execução mais curtos que threads, uma vez que as tasks podem ser criadas e destruídas de forma mais eficiênte. 
-    Em TBB as tasks podem instanciar e criar novas tasks através da criação de dependências hierárquicas, dessa forma as novas tasks se tornam filhas das tasks que as criaram, esssa formação hierárquica permite aos programadores criar dependências de execução complexas, o que torna a TBB uma biblioteca de paralelização versátil e dinâmica, capaz de dar suporte a diversos tipos de paralelismo(mesma ref de cima).
+    \textit{Threading Building Blocks} é um ambiente de paralelização baseado em C++ que oferece um conjunto de métodos e templates para a criação de aplicações paralelas \cite{4636091}. Essa ferramenta se baseia no suporte a tarefas (ou \textit{tasks}) paralelas ao invés de threads e, com isso, oferece uma maior escalabilidade da performance ao redistribuir dinamicamente as tarefas entre os processadores disponíveis. As \textit{tasks} são regiões especiais do código que cumprem uma ação específica, uma vantagem das \textit{tasks} é que elas normalmente possuem corpos de execução mais curtos que threads, uma vez que as \textit{tasks} podem ser criadas e destruídas de forma mais eficiênte. 
+    Em TBB as \textit{tasks} podem instanciar e criar novas \textit{tasks} através da criação de dependências hierárquicas, dessa forma as novas \textit{tasks} se tornam filhas das \textit{tasks} que as criaram, esssa formação hierárquica permite aos programadores criar dependências de execução complexas, o que torna a TBB uma biblioteca de paralelização versátil e dinâmica, capaz de dar suporte a diversos tipos de paralelismo \cite{4636091}.
   \section{OpenMP}
-    OpenMP é uma API que se baseia em um modelo fork-join de execução paralela. As diretrizes do OpenMP extendem o tradicional modelo de programação sequencial do C e C++ adicionando construtos de SPMD, sincronização e divisão de trabalho. Como utiliza o modelo de fork-join o OpenMP é mais recomendado para a execução de programas que executariam corretamente tanto de forma paralela como sequencial(cspec20).
-    Um programa criado com OpenMP inicia a sua execução como uma unica thread chamada master thread, essa thread irá executar de forma sequancial até que o primeiro construto paralelo seja encontrado, uma vez que o construto paralelo é encontrado a master thread irá criar um grupo de threads e se tornará mestre do grupo, uma vez que o construto paralelo tenha sido completado o grupo de threads irá sincronizar e somente a master thread irá continuar executando. O OpenMP tambem permite a utilização de diretrizes órfãs, essas diretrizes dão ao programador a capacidade de executar grandes porções do programa em paralelo com mínimas mudanças na parte sequencial.
+    OpenMP é uma API que se baseia em um modelo \textit{fork-join} de execução paralela. As diretrizes do OpenMP extendem o tradicional modelo de programação sequencial base do C, C++ e Fortran adicionando construtos de SPMD, sincronização, tarefas, dispositivos e divisão de trabalho. Como utiliza o modelo de \textit{fork-join} o OpenMP é mais recomendado para a execução de programas que executariam corretamente tanto de forma paralela como sequencial, apesar de suportar programas que funcionam somente de forma paralela ou que apresentam resultados diferentes quando executados de forma paralela comparados com quando executados de forma sequencial(cspec20).
+    Um programa criado com OpenMP inicia a sua execução como uma unica thread chamada thread mestre, essa thread irá executar de forma sequancial até que o primeiro construto paralelo seja encontrado, uma vez que o construto paralelo é encontrado a thread mestre irá criar um grupo de threads e se tornará mestre do grupo, uma vez que o construto paralelo tenha sido completado o grupo de threads irá sincronizar e somente a thread mestre irá continuar executando. O OpenMP tambem permite a utilização de diretrizes órfãs, essas diretrizes dão ao programador a capacidade de executar grandes porções do programa em paralelo com mínimas mudanças na parte sequencial.
 
   \section{Anahy}
-    Anahy é um ambiente de programação e execução que oferece uma API que permite a paralelização através de tarefas, as quais são armazenadas em um grafo de acordo com a dependência de execução que existe entre elas(REF). Essa abordagem aumenta a portabilidade do código uma vez que o programador pode definir o número de atividades concorrentes da sua aplicação sem considerar os recursos de processamentos disponíveis.
-
+    O Anahy propõe um modelo para um ambinete de programação paralela de alto desempenho. Esse modelo é composto por duas camadas, uma definindo uma interface de programação de alto nível e outra um mecanismo de escalonamento de tarefas \cite{Castaneda:08}. As tarefas são armazenadas em um grafo de acordo com a dependência de execução que existe entre elas e escalonadas para os processadores de forma dinâmica. Essa abordagem aumenta a portabilidade do código uma vez que o programador pode definir o número de atividades concorrentes da sua aplicação sem considerar os recursos de processamento disponíveis na máquina. 
+    
 
 \chapter{Conclusão}
-  Como mostrado o Agglomerative Clustering é um forte candidato para a construção de um Benchmark com foco em técnicas de programação paralela, alem disso a sua implemetação utilizando diferentes ferramentas de programação paralela permite avaliar qual delas apresenta os melhores recursos e o melhor desempenho na resolução desse problema.
+  Como mostrado o \textit{Agglomerative Clustering} é um forte candidato para a construção de um benchmark com foco em técnicas de programação paralela, alem disso a sua implementação utilizando diferentes ferramentas de programação paralela permite avaliar qual delas apresenta os melhores recursos e o melhor desempenho na resolução desse problema.
 
 %\input{chapters/intro}
 %\input{chapters/agc}
@@ -132,7 +148,7 @@
 %\chapter{Outro Anexo}
 
 %Faz a capa do CDROM
-\makecover
+%\makecover
 
 \end{document}
 
