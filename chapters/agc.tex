@@ -1,13 +1,28 @@
-\usepackage[latin1]{inputenc} % acentuacao
-\usepackage{graphicx} % para inserir figuras
-
-\hypersetup{
-    hidelinks, % Remove coloraÃ§Ã£o e caixas
-    unicode=true,   %Permite acentuaÃ§Ã£o no bookmark
-    linktoc=all %Habilita link no nome e pÃ¡gina do sumÃ¡rio
-}
-
 \chapter{Agglomerative Clustering}
-	Benchmarking Ã© uma prÃ¡tica que consiste em criar programas, operaÃ§Ãµes ou casos de teste para testar o desempenho de um objeto, seja ele software ou hardware (SAAVE-DRA;SMITH, 1996), essa tÃ©cnica Ã© amplamente abordade em diversas Ã¡reas da computaÃ§Ã£o. Nesse trabalho serÃ¡ abordado o desenvolvimento de um benchmark do Agglomerative Clustering.
-	O Agglomerative Clustering Ã© um algoritmo bottom-up, que recebe como entrada um data-set de pontos em um espaÃ§o n-dimenional e uma funÃ§Ã£o que mede a similaridade entre os itens desse data-set, normalmente essa funÃ§Ã£o representa uma mÃ©trica de distÃ¢ncia entre os pontos no espaÃ§o, onde os pontos mais semelhantes e encontram mais prÃ³ximos.
-	O algoritmo trabalha agrupando os pontos mais prÃ³ximos e, com isso, gera uma Binary Cluster Tree (BCT), que Ã© o resultado do agrupamento dos dados.
+  Benchmarking é uma prática que consiste em criar programas, operações ou casos de teste para testar o desempenho de um objeto, seja ele software ou hardware \cite{saavedra:96}, essa técnica é amplamente abordade em diversas áreas da computação. Esses benchmarks propõem situações que podem ocorer no mundo real, então uma performance de um objeto executando um benchmark é uma prévia de como o objeto executaria uma aplicação real. Nesse trabalho será abordado o desenvolvimento de um benchmark do \textit{Agglomerative Clustering} utilizando programação paralela.
+  O \textit{Agglomerative Clustering} é um algoritmo \textit{bottom-up}, que recebe como entrada \textit{um data-set} de pontos em um espaço n-dimenional e uma função que mede a similaridade entre os itens desse \textit{data-set}, normalmente essa função representa uma métrica de distância entre os pontos no espaço, onde os pontos mais semelhantes entre si se encontram mais próximos.
+  O algoritmo trabalha agrupando os pontos mais próximos em conjuntos e subsequentemente os conjuntos mais próximos em outros conjuntos. O resultado desse agrupamento é uma \textit{Binary Cluster Tree}, uma estrutura em forma de árvore que contem o registro dos agrupamentos e que permite diversas operações no conjunto de dados, um exemplo é a poda da árvore, que pode ser utilizada para separar conjuntos com uma quantidade mínima de similaridade entre seus membros.
+  Em comparação com as outras abordagens, a técnica aglomerativa oferece a vantagem de permitir um agrupamento mais flexível e geralmente produz árvores de maior qualidade sendo usada em uma grande variedade de campos e aplicações, como mineração de dados e bioinformática \cite{walter08}.
+  A forma de implementação mais simples do \textit{Agglomerative Clustering} apresenta um tempo de execução de O(n\textsuperscript{3}), ou seja, o tempo estimado da execução do programa cresce em uma proporção cúbica em relação ao conjunto de dados, o que para um conjunto grande de dados se torna um processo inviável. No entanto, dependendo da natureza dos dados e das métricas de avaliação, formas mais eficientes do algoritmo podem ser usadas e a sua complexidade geral é considerada O(n\textsuperscript{2}) \cite{Olson:1995}. Essa complexidade ainda é muito grande para trabalhar com grandes conjuntos de dados e portanto é interessante a implementação do algoritmo utilizando paralelismo para aumentar a sua eficiência.
+  Para a implementação do \textit{Agglomerative Clustering} é possivel escolher entre diversas métricas que serão utilizadas para calcular a distância entre os conjuntos, essa escolha tem um grande impacto tanto no desempenho como na construção do código e as métricas em si podem ser divididas em duas classes gerais, métricas de grafo e métricas geométricas.
+  Considerando um grafo completamente conectado onde os vértices são os pontos a serem agrupados e as arestas representam a diferença entre esses pontos através da distância euclidiana, as métricas de grafo determinam a similaridade entre dois conjuntos através do cálculo de similaridade entre os pontos desses conjuntos, as mais comuns dessas métricas são:
+  
+  \begin{itemize}
+
+    \item Ligação Simples: A distância entre dois conjuntos é dada pela menor distância entre pontos desses conjuntos.
+    \item Ligação Média: A distânca entre dois conjuntos é dada pela média de todos as distâncias entre pontos desses conjuntos.
+    \item Ligação Completa: A distância entre dois conjuntos é dada pela maior distância entre pontos desses conjuntos
+  
+  \end{itemize}
+  
+  As métricas geométricas tambem consideram uma representação de grafo completo, no entanto elas definem um centro para cada conjuntos e esse centro que será usado para definir a distância entre os conjuntos, as mais comuns dessas métricas são:
+  
+  \begin{itemize}
+  
+    \item Centroide: O centro do conjuntos é o centroide dos pontos do conjuntos, a distância euclidiana é utilizada como medida.
+    \item Mediana: O centro do conjuntos é a média dos centros dos dois clusters aglomerados para formá-lo, a distância euclidiana é utilizada como medida.
+    \item Variância Mínima: O centro do conjuntos é o centroide dos pontos do conjuntos, a distância é o aumento na soma do quadrado das distâncias de cada ponto até o centróide que seria gerado ao aglomerar os dois clusters.   
+  
+  \end{itemize}
+  
+  Cada métrica apresenta suas vantagens, onde algumas inclusive garantem certas características que facilitam o desenvolvimento do algoritmo, nesse trabalho será utilizado pelo menos uma métrica geométrica e uma métrica de grafo.
